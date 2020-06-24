@@ -53,6 +53,9 @@ function ConfigViewModel(baseEndpoint) {
     "divert_attack_smoothing_factor": 0.4,
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,
+    "divert_max_grid_current": 0,
+    "divert_message_timeout": 0,
+    "divert_safe_current": 0,
     "charge_mode": "full",
     "pause_uses_disabled": false
   }, endpoint);

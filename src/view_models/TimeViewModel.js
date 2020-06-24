@@ -18,7 +18,7 @@ function TimeViewModel(openevse)
       if(openevse.isCharging()) {
         self.elapsedNow(new Date((openevse.status.elapsed() * 1000) + ((new Date()) - self.elapsedLocal())));
       }
-      /*if(openevse.isEcoModeAvailable())*/ {
+      /*if(openevse.isDivertModeAvailable())*/ {
         self.divertUpdateNow(new Date((openevse.status.divert_update() * 1000) + ((new Date()) - self.divertUpdateLocal())));
       }
     }, 1000);

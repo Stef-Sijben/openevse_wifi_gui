@@ -496,7 +496,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       divert_PV_ratio: self.config.divert_PV_ratio(),
       divert_attack_smoothing_factor: self.config.divert_attack_smoothing_factor(),
       divert_decay_smoothing_factor: self.config.divert_decay_smoothing_factor(),
-      divert_min_charge_time: self.config.divert_min_charge_time()
+      divert_min_charge_time: self.config.divert_min_charge_time(),
+      divert_message_timeout: self.config.divert_message_timeout(),
+      divert_safe_current: self.config.divert_safe_current(),
+      divert_max_grid_current: self.config.divert_max_grid_current()
     };
   }).validate((divert) => {
     if (divert.divert_enabled && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
@@ -513,7 +516,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     };
   });
 
-  self.isEcoModeAvailable = ko.pureComputed(function () {
+  self.isDivertModeAvailable = ko.pureComputed(function () {
     return self.config.mqtt_enabled() &&
            ("" !== self.config.mqtt_solar() ||
             "" !== self.config.mqtt_grid_ie());
@@ -527,6 +530,14 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.config.charge_mode((val && self.config.divert_enabled()) ? "eco" : "fast");
       self.chargeMode.save();
     }
+  });
+
+  self.limitGridCurrent = ko.pureComputed(function () {
+    return self.config.divert_max_grid_current() > 0;
+  });
+
+  self.divertEnabled = ko.pureComputed(function () {
+    return self.ecoMode() || self.limitGridCurrent();
   });
 
   self.status.divertmode.subscribe((val) => {

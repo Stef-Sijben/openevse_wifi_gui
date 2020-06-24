@@ -444,7 +444,25 @@
               <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
-            <p data-bind="visible: isEcoModeAvailable">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Message timeout:</b><br>
+              <input data-bind="textInput: config.divert_message_timeout" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
+              <span class="small-text">If no message is received on the configured feed for this time (seconds), the charging current is set to the safe current.</span>
+            </p>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Safe current:</b><br>
+              <input data-bind="textInput: config.divert_safe_current" type="number" autocapitalize="none" hint="6" min="0" max="80" step="1"><br>
+              <span class="small-text">Set the charging current to this value (A) when divert mode is active and no message is received for the interval configured in message timeout. Set to 0 to stop charging.</span>
+            </p>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Max grid current:</b><br>
+              <input data-bind="textInput: config.divert_max_grid_current" type="number" autocapitalize="none" hint="100" min="0" max="1000" step="1"><br>
+              <span class="small-text">If this is set, the charging current is continuously adjusted so the imported grid current does not exceed this value (A).</span>
+            </p>
+
+            <p data-bind="visible: isDivertModeAvailable">
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
@@ -489,7 +507,7 @@
               </tr>
             </table>
             
-            <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
+            <div data-bind="visible: divertEnabled() &amp;&amp; isDivertModeAvailable()">
               <br>
               <span data-bind="visible: haveSolar"><b>Solar:</b></span>
               <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
@@ -516,7 +534,7 @@
           <div class="box380 left" data-bind="visible: status.rapi_connected">
             <h2>Charge Options</h2>
 
-            <div data-bind="visible: isEcoModeAvailable">
+            <div data-bind="visible: isDivertModeAvailable">
               <span data-bind="css: {selected: !ecoMode() }">Normal (fast)</span>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: ecoMode" />
