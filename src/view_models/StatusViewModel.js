@@ -48,6 +48,12 @@ function StatusViewModel(baseEndpoint) {
     "offset": false
   }, endpoint);
 
+  // This is a relative timer, so even if it is updated with its current value,
+  // it refers to a different time.
+  self.divert_update.extend({
+    notify: 'always'
+  });
+
   // Some devired values
   self.isWiFiError = ko.pureComputed(function () {
     return ("ERR" === self.mode());
